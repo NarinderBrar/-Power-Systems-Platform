@@ -4,11 +4,13 @@
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec3 colour;
 
+uniform mat4 model;
+uniform mat4 view;
 uniform mat4 u_mvpMatrix;
 
 void main()
 {
-    gl_Position = u_mvpMatrix * position;
+    gl_Position = u_mvpMatrix * view * model * position;
 };
 
 #shader fragment

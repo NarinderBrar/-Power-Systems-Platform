@@ -44,10 +44,10 @@ void Bus::Draw(wxPoint2DDouble translation, double scale) const
     if(m_selected) {
         // If the object is selected, the matrix is reset to remove scale effects applied to it, thus keeping the
         // edges with fixed sizes for all zoom levels.
-        glPushMatrix();
-        glLoadIdentity();
+        //glPushMatrix();
+        //glLoadIdentity();
         // The matrix was reset, so we must use screen coordinates (WorldToScreen).
-        wxPoint2DDouble screenPt = WorldToScreen(translation, scale);
+        /*wxPoint2DDouble screenPt = WorldToScreen(translation, scale);
         glTranslated(screenPt.m_x, screenPt.m_y, 0.0);
         glRotated(m_angle, 0.0, 0.0, 1.0);
         glTranslated(-screenPt.m_x, -screenPt.m_y, 0.0);
@@ -61,29 +61,35 @@ void Bus::Draw(wxPoint2DDouble translation, double scale) const
                                   WorldToScreen(translation, scale, (m_width / 2.0), (m_height / 2.0)) -
                                       wxPoint2DDouble(-m_borderSize, -m_borderSize),
                                   WorldToScreen(translation, scale, (m_width / 2.0), -(m_height / 2.0)) -
-                                      wxPoint2DDouble(-m_borderSize, m_borderSize)};
+                                      wxPoint2DDouble(-m_borderSize, m_borderSize)};*/
+        glColor4dv( m_selectionColour.GetRGBA() );
+        wxPoint2DDouble pts[4] = { wxPoint2DDouble(0,0), wxPoint2DDouble( 0,0.1 ), wxPoint2DDouble( 0.1,0.1 ), wxPoint2DDouble( 0.1,0 ) };
         DrawRectangle(pts);
-        glPopMatrix();
+        //glPopMatrix();
     }
     // Draw bus (layer 2)
     // Push the current matrix on stack.
-    glPushMatrix();
+    //glPushMatrix();
     // Rotate the matrix around the object position.
-    glTranslated(m_position.m_x, m_position.m_y, 0.0);
+    /*glTranslated(m_position.m_x, m_position.m_y, 0.0);
     glRotated(m_angle, 0.0, 0.0, 1.0);
     glTranslated(-m_position.m_x, -m_position.m_y, 0.0);
+    */
 
     if(m_dynEvent)
         glColor4dv(m_dynamicEventColour.GetRGBA());
     else
         glColor4dv(m_busColour.GetRGBA());
 
-    DrawRectangle(m_position, m_width, m_height);
+    wxPoint2DDouble pts[4] = { wxPoint2DDouble( 0,0 ), wxPoint2DDouble( 0,0.12 ), wxPoint2DDouble( 0.12,0.12 ), wxPoint2DDouble( 0.12,0 ) };
+    DrawRectangle( pts );
+
+    //DrawRectangle(m_position, m_width, m_height);
     // Pop the old matrix back.
-    glPopMatrix();
+    //glPopMatrix();
 
     // Draw pickbox (layer 3)
-    if(m_showPickbox) {
+   /* if(m_showPickbox) {
         glPushMatrix();
         glLoadIdentity();
 
@@ -98,7 +104,7 @@ void Bus::Draw(wxPoint2DDouble translation, double scale) const
         DrawPickbox(pbPosition[1]);
 
         glPopMatrix();
-    }
+    }*/
 }
 
 void Bus::DrawDC(wxPoint2DDouble translation, double scale, wxGraphicsContext* gc) const

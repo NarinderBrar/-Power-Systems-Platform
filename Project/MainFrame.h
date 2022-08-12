@@ -28,6 +28,7 @@
 class MainFrameBase;
 class wxRibbonMetroArtProvider;
 class Workspace;
+class Workspace3D;
 class FileHanding;
 class GeneralPropertiesForm;
 class SimulationsSettingsForm;
@@ -129,6 +130,8 @@ class MainFrame : public MainFrameBase
     virtual void OnImportClick(wxRibbonButtonBarEvent& event);
 
     std::vector<Workspace*> m_workspaceList;
+    std::vector<Workspace3D*> m_workspaceList3D;
+
     int m_projectNumber = 1;
 
     wxRibbonMetroArtProvider* m_artMetro = nullptr;

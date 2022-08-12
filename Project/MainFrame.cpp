@@ -38,6 +38,7 @@
 #include "SyncMotor.h"
 #include "Transformer.h"
 #include "Workspace.h"
+#include "Workspace3D.h"
 #include "artProvider/ArtMetro.h"
 #include "WorkspaceDC.h"
 
@@ -203,26 +204,40 @@ void MainFrame::OnNewClick(wxRibbonButtonBarEvent& event)
     EnableCurrentProjectRibbon();
 
     Workspace* newWorkspace;
-    if (m_generalProperties->GetGeneralPropertiesData().useOpenGL) {
-        newWorkspace = new Workspace(this, wxString::Format(_("New project %d"), m_projectNumber),
-            this->GetStatusBar(), m_sharedGLContext);
+    Workspace3D* newWorkspace3dWindow;
+
+    if (m_generalProperties->GetGeneralPropertiesData().useOpenGL) 
+    {
+        newWorkspace = new Workspace(this, wxString::Format(_("New project %d"), m_projectNumber), this->GetStatusBar(), m_sharedGLContext);
+        newWorkspace3dWindow = new Workspace3D( this, wxString::Format( _( "New 3D project %d" ), m_projectNumber ), this->GetStatusBar(), m_sharedGLContext );
+
         if (!m_sharedGLContext) m_sharedGLContext = newWorkspace->GetSharedGLContext();
     }
-    else {
-        newWorkspace = new WorkspaceDC(this, wxString::Format(_("New project %d"), m_projectNumber),
-            this->GetStatusBar());
+    else 
+    {
+        newWorkspace = new WorkspaceDC(this, wxString::Format(_("New project %d"), m_projectNumber),this->GetStatusBar());
+        newWorkspace3dWindow = new Workspace3D( this, wxString::Format( _( "New 3D project %d" ), m_projectNumber ), this->GetStatusBar() );
     }
+
     // Set general properties in new Workspace
     newWorkspace->GetProperties()->SetGeneralPropertiesData(m_generalProperties->GetGeneralPropertiesData());
+    newWorkspace3dWindow->GetProperties()->SetGeneralPropertiesData( m_generalProperties->GetGeneralPropertiesData() );
 
     m_workspaceList.push_back(newWorkspace);
+    m_workspaceList3D.push_back(newWorkspace3dWindow);
 
     m_ribbonButtonBarContinuous->ToggleButton(ID_RIBBON_DISABLESOL, true);
     m_ribbonButtonBarContinuous->ToggleButton(ID_RIBBON_ENABLESOL, false);
 
     m_auiNotebook->AddPage(newWorkspace, newWorkspace->GetName(), true);
+    m_auiNotebook->AddPage(newWorkspace3dWindow, newWorkspace3dWindow->GetName(), true );
+    
     newWorkspace->Redraw();
+    newWorkspace3dWindow->Redraw();
+
     newWorkspace->SetJustOpened(true);
+    newWorkspace3dWindow->SetJustOpened( true );
+
     m_projectNumber++;
 }
 
@@ -232,7 +247,10 @@ void MainFrame::OnAboutClick(wxRibbonButtonBarEvent& event)
     about.ShowModal();
 }
 
-void MainFrame::OnAddElementDropdown(wxRibbonButtonBarEvent& event) { event.PopupMenu(m_addElementsMenu); }
+void MainFrame::OnAddElementDropdown(wxRibbonButtonBarEvent& event) 
+{ 
+    event.PopupMenu(m_addElementsMenu);
+}
 void MainFrame::OnChartsClick(wxRibbonButtonBarEvent& event)
 {
     if (Workspace* workspace = dynamic_cast<Workspace*>(m_auiNotebook->GetCurrentPage())) {
@@ -469,8 +487,7 @@ void MainFrame::OnAddElementsClick(wxCommandEvent& event)
 
             switch (event.GetId()) {
             case ID_ADDMENU_BUS: {
-                Bus* newBus = new Bus(wxPoint2DDouble(0, 0),
-                    wxString::Format(_("Bus %d"), workspace->GetElementNumber(ID_BUS)));
+                Bus* newBus = new Bus(wxPoint2DDouble(0, 0), wxString::Format(_("Bus %d"), workspace->GetElementNumber(ID_BUS)));
                 workspace->IncrementElementNumber(ID_BUS);
                 elementList.push_back(newBus);
                 statusBarText = _("Insert Bus: Click to insert, ESC to cancel.");

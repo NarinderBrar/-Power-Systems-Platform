@@ -291,6 +291,7 @@
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Workspace.cpp" />
+    <ClCompile Include="Workspace3D.cpp" />
     <ClCompile Include="WorkspaceBase.cpp" />
     <ClCompile Include="WorkspaceBitmaps.cpp" />
     <ClCompile Include="WorkspaceDC.cpp" />
@@ -959,6 +960,7 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexBufferLayout.h" />
     <ClInclude Include="Workspace.h" />
+    <ClInclude Include="Workspace3D.h" />
     <ClInclude Include="WorkspaceBase.h" />
     <ClInclude Include="WorkspaceDC.h" />
     <ClInclude Include="wxMathPlot\mathplot.h" />

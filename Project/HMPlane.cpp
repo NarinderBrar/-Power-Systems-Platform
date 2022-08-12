@@ -71,9 +71,17 @@ void HMPlane::Draw(const Renderer& renderer, const glm::mat4& projectionViewMatr
     //const glm::mat4 mvp = projectionViewMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f));
     const glm::mat4 mvp = projectionViewMatrix;
 
+    glm::mat4 view = glm::mat4( 1.0 );
+    view = glm::translate( view, glm::vec3( 0, 0, 0 ));
+
+    glm::mat4 model = glm::mat4( 1.0 );
+    model = glm::translate( view, glm::vec3( 10, 10, 10 ) );
+
     m_shader->Bind();
     //m_shader->SetUniform1f("u_scale", m_scale);
     m_shader->SetUniformMatrix4fv("u_mvpMatrix", mvp);
+    m_shader->SetUniformMatrix4fv( "view", view );
+    m_shader->SetUniformMatrix4fv( "model", model );
 
     m_va->UpdateBuffer(*m_vb, m_bufferCoords.data(), m_bufferCoords.size() * sizeof(float));
 
